@@ -25,7 +25,7 @@ public:
 		{
 			shape.setScale({obj.radius, obj.radius });
 			shape.setPosition(obj.position);
-			shape.setFillColor(sf::Color(100, 250, 50));
+			shape.setFillColor(obj.color);
 			m_Target.draw(shape);
 		}
 

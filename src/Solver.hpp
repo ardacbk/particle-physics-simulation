@@ -6,9 +6,10 @@ class Solver {
 public:
 	Solver() = default;
 	
-	VerletParticle& addObject(sf::Vector2f position, float radius) {
+	VerletParticle& addObject(sf::Vector2f position, float radius, sf::Color color = sf::Color::Cyan) {
 
 		VerletParticle particle = VerletParticle(position, radius);
+		particle.color = color;
 
 		return m_objects.emplace_back(particle);
 		
