@@ -14,9 +14,11 @@ public:
 		
 	}
 
-	void update() {
+	void update(float dt) {
 		applyGravity();
-		updateObjects(m_dt);
+		applyConstraint();
+		handleCollisions();
+		updateObjects(dt);
 	}
 
 	const std::vector<VerletParticle>& getObjects() const {
@@ -35,7 +37,7 @@ public:
 
 private:
 	std::vector<VerletParticle> m_objects;
-	sf::Vector2f m_gravity = { 0.0f, 10.0f };
+	sf::Vector2f m_gravity = { 0.0f, 1000.0f };
 	float m_dt = 1.0f / 60.0f;
 	sf::Vector2f m_boundryCenter = { 420.0f,420.0f };
 	float m_boundryRadius = 100.0f;
@@ -49,6 +51,53 @@ private:
 	void updateObjects(float _dt) {
 		for (auto& obj : m_objects) {
 			obj.update(_dt);
+		}
+	}
+
+	void applyConstraint() {
+
+		for (auto& obj : m_objects) {
+
+			// particle and boundry distance vector 
+			const sf::Vector2f dVec = obj.position - m_boundryCenter;
+
+			// length of the distance
+			const float dist = sqrt(dVec.x * dVec.x + dVec.y * dVec.y);
+
+			// obj is in outside of the boundry
+			if (dist > (m_boundryRadius - obj.radius)) {
+				const sf::Vector2f normal = dVec / dist;
+				obj.position = m_boundryCenter + normal * (m_boundryRadius - obj.radius);
+			}
+		}
+	}
+
+	void handleCollisions() {
+		size_t objCount = m_objects.size();
+		for (size_t i = 0; i < objCount; i++) {
+			VerletParticle& obj1 = m_objects[i];
+			for (size_t j = 0; j < objCount; j++) {
+				if (i == j) continue;
+				VerletParticle& obj2 = m_objects[j];
+				sf::Vector2f distVec = obj1.position - obj2.position;
+				float dist = sqrt(distVec.x * distVec.x + distVec.y * distVec.y);
+				float minDist = obj1.radius + obj2.radius;
+
+				if (dist < minDist && dist != 0) {
+					// Normal vector pointing obj1 <---- obj2
+					sf::Vector2f normal = distVec / dist;
+
+					//offset
+					float delta = 0.5f * (minDist - dist);
+					float totalMass = (obj1.radius * obj1.radius) + (obj2.radius * obj2.radius);
+					float massRatio = obj1.radius * obj2.radius / totalMass;
+
+					// larger mass moves slower
+					obj1.position += normal * (1 - massRatio) * delta;
+					obj2.position -= normal * ( massRatio) * delta;
+
+				}
+			}
 		}
 	}
 };

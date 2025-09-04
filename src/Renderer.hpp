@@ -14,11 +14,12 @@ public:
 		boundryCircle.setOrigin({ boundry.z, boundry.z });
 		boundryCircle.setFillColor(sf::Color::Black);
 		boundryCircle.setPosition({ boundry.x,boundry.y });
-		boundryCircle.setPointCount(128);
+		boundryCircle.setPointCount(512);
 		m_Target.draw(boundryCircle);
 
 		sf::CircleShape shape{ 1.0f };
 		shape.setPointCount(32);
+		shape.setOrigin({ 1.0f,1.0f });
 		const std::vector<VerletParticle> objects = solver.getObjects();
 		for (const auto &obj : objects)
 		{
