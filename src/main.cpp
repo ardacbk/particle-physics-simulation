@@ -2,12 +2,25 @@
 #include "Renderer.hpp"
 #include "Solver.hpp"
 #include <random>
+#include <iostream>
+#include <numbers>
 
+static sf::Color getRainbow(float t)
+{
+	const float r = sin(t);
+	const float g = sin(t + 0.33f * 2.0f * std::numbers::pi_v<float>);
+	const float b = sin(t + 0.66f * 2.0f * std::numbers::pi_v<float>);
+	return { static_cast<uint8_t>(255.0f * r * r),
+			static_cast<uint8_t>(255.0f * g * g),
+			static_cast<uint8_t>(255.0f * b * b) };
+}
 
 
 int main() {
 	constexpr int32_t height = 840;
 	constexpr int32_t width = 840;
+	static float seed = 0.0f;
+
 
 	const uint32_t frame_rate = 800;
 	const float physics_timestep = 1.0f / 60.0f;
@@ -20,7 +33,7 @@ int main() {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> radiusDist(5.0f, 20.0f); 
-	std::uniform_int_distribution<int> colorDist(0, 255);
+	std::uniform_int_distribution<int> colorDist(128, 255);
 
 	sf::RenderWindow window(sf::VideoMode({ width,height }), "VerletParticleSimulation");
 	sf::ContextSettings settings = window.getSettings();
@@ -45,8 +58,9 @@ int main() {
 				sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
 				
 				float radius = radiusDist(gen);
+				seed += 1.0f;
 
-				sf::Color color{ static_cast<uint8_t>(colorDist(gen)),static_cast<uint8_t>(colorDist(gen)), static_cast<uint8_t>(colorDist(gen)) };
+				sf::Color color = getRainbow(seed);
 
 				solver.addObject(mousePosF, radius,color);
 

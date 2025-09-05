@@ -136,6 +136,9 @@
     <ClCompile Include="src\Solver.hpp" />
     <ClCompile Include="src\VerletParticle.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Math.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

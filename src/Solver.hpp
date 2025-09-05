@@ -1,6 +1,7 @@
 #pragma once
 #include "VerletParticle.hpp"
 #include <vector>
+#include "Math.hpp"
 
 class Solver {
 public:
@@ -16,8 +17,9 @@ public:
 	}
 
 	void update(float dt) {
+		dt;
 		applyGravity();
-		applyConstraint();
+		applyConstraint(dt);
 		handleCollisions();
 		updateObjects(dt);
 	}
@@ -55,7 +57,7 @@ private:
 		}
 	}
 
-	void applyConstraint() {
+	void applyConstraint(float dt) {
 
 		for (auto& obj : m_objects) {
 
@@ -68,7 +70,11 @@ private:
 			// obj is in outside of the boundry
 			if (dist > (m_boundryRadius - obj.radius)) {
 				const sf::Vector2f normal = dVec / dist;
+				sf::Vector2f vel = obj.getVelocity();
+				float dot = Math::dot(vel, -normal);
+				sf::Vector2f newVel = vel - 2.0f * dot * -normal;
 				obj.position = m_boundryCenter + normal * (m_boundryRadius - obj.radius);
+				obj.setVelocity(newVel, 1.0f);
 			}
 		}
 	}
