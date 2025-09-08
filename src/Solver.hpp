@@ -17,7 +17,6 @@ public:
 	}
 
 	void update(float dt) {
-		dt;
 		applyGravity();
 		applyConstraint(dt);
 		handleCollisions();
@@ -37,6 +36,20 @@ public:
 	sf::Vector3f getBoundry() const {
 		return {m_boundryCenter.x, m_boundryCenter.y, m_boundryRadius};
 	}
+
+	void pullObjects(sf::Vector2f pullPos) {
+		for (auto& obj : m_objects) {
+			const sf::Vector2f forceDir = pullPos - obj.position;
+			const float dist = sqrt(forceDir.x * forceDir.x + forceDir.y * forceDir.y);
+			sf::Vector2f pullForce = 1000000.0f * (forceDir / (dist*dist));
+			obj.accelerate(pullForce);
+		}
+	}
+
+	void setObjectVelocity(VerletParticle& obj, sf::Vector2f vel) {
+		obj.setVelocity(vel,1.0f);
+	}
+
 
 private:
 	std::vector<VerletParticle> m_objects;
@@ -71,8 +84,8 @@ private:
 			if (dist > (m_boundryRadius - obj.radius)) {
 				const sf::Vector2f normal = dVec / dist;
 				sf::Vector2f vel = obj.getVelocity();
-				float dot = Math::dot(vel, -normal);
-				sf::Vector2f newVel = vel - 2.0f * dot * -normal;
+				float dot = Math::dot(vel, normal);
+				sf::Vector2f newVel = vel - 2.0f * dot * normal;
 				obj.position = m_boundryCenter + normal * (m_boundryRadius - obj.radius);
 				obj.setVelocity(newVel, 1.0f);
 			}
@@ -107,4 +120,5 @@ private:
 			}
 		}
 	}
+
 };
