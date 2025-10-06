@@ -44,7 +44,7 @@ int main() {
 	settings.antiAliasingLevel = 1;
 
 	Renderer renderer{ window };
-	Solver solver;
+	Solver solver(width, height);
 	solver.setBoundry({ (float)height / 2, (float)width / 2 }, 350.0f);
 
 	while (window.isOpen()) {
@@ -68,7 +68,6 @@ int main() {
 			sf::Color color = getRainbow(seed);
 
 			solver.addObject(mousePosF, radius, color);
-
 
 			spawnClock.restart();
 		}
@@ -99,7 +98,7 @@ int main() {
 
 		}
 
-		window.clear(sf::Color(156, 153, 152));
+		window.clear(sf::Color::Black);
 		renderer.render(solver);
 		window.display();
 	}

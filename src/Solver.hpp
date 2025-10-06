@@ -5,7 +5,11 @@
 
 class Solver {
 public:
-	Solver() = default;
+
+	Solver(int32_t width, int32_t height){
+		m_width = width;
+		m_height = height;
+	}
 	
 	VerletParticle& addObject(sf::Vector2f position, float radius, sf::Color color = sf::Color::Cyan) {
 
@@ -18,7 +22,7 @@ public:
 
 	void update(float dt) {
 		applyGravity();
-		applyConstraint(dt);
+		applySquareConstraint();
 		handleCollisions();
 		updateObjects(dt);
 	}
@@ -57,6 +61,8 @@ private:
 	float m_dt = 1.0f / 60.0f;
 	sf::Vector2f m_boundryCenter = { 420.0f,420.0f };
 	float m_boundryRadius = 100.0f;
+	int32_t m_width;
+	int32_t m_height;
 
 	void applyGravity() {
 		for (auto& obj : m_objects) {
@@ -70,7 +76,32 @@ private:
 		}
 	}
 
-	void applyConstraint(float dt) {
+	void applySquareConstraint(float dt = 1) {
+
+		for (auto& obj : m_objects) {
+			if (obj.position.y - obj.radius < 0 ) {
+				obj.position.y = obj.radius;
+				sf::Vector2f newVel = obj.getVelocity();
+				newVel.y *= -1;
+				obj.setVelocity(newVel, dt);
+			}
+			else if (obj.position.y + obj.radius > m_height) {
+				obj.position.y = m_height - obj.radius;
+			}
+			if (obj.position.x - obj.radius < 0) {
+				obj.position.x = obj.radius;
+				sf::Vector2f newVel = obj.getVelocity();
+				newVel.x *= -1;
+				obj.setVelocity(newVel,dt);
+			}
+			else if (obj.position.x + obj.radius > m_width) {
+				obj.position.x = m_width - obj.radius;
+			}
+
+		}
+	}
+
+	void applyCircularConstraint(float dt) {
 
 		for (auto& obj : m_objects) {
 

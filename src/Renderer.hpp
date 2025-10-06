@@ -6,16 +6,19 @@ class Renderer {
 public:
 	explicit Renderer(sf::RenderTarget& target) : m_Target{ target } {}
 
-	void render(Solver solver) {
-
+	void drawCircularBoundry(Solver solver) {
 		sf::Vector3f boundry = solver.getBoundry();
-		//Draw boundry
 		sf::CircleShape boundryCircle{ boundry.z };
 		boundryCircle.setOrigin({ boundry.z, boundry.z });
 		boundryCircle.setFillColor(sf::Color::Black);
 		boundryCircle.setPosition({ boundry.x,boundry.y });
 		boundryCircle.setPointCount(512);
 		m_Target.draw(boundryCircle);
+	}
+
+	void render(Solver solver) {
+
+		// drawCircularBoundry(solver);
 
 		sf::CircleShape shape{ 1.0f };
 		shape.setPointCount(32);
