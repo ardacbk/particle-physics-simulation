@@ -87,6 +87,9 @@ private:
 			}
 			else if (obj.position.y + obj.radius > m_height) {
 				obj.position.y = m_height - obj.radius;
+				sf::Vector2f newVel = obj.getVelocity();
+				newVel.y *= -1;
+				obj.setVelocity(newVel, dt);
 			}
 			if (obj.position.x - obj.radius < 0) {
 				obj.position.x = obj.radius;
@@ -96,6 +99,9 @@ private:
 			}
 			else if (obj.position.x + obj.radius > m_width) {
 				obj.position.x = m_width - obj.radius;
+				sf::Vector2f newVel = obj.getVelocity();
+				newVel.x *= -1;
+				obj.setVelocity(newVel, dt);
 			}
 
 		}

@@ -27,16 +27,17 @@ int main() {
 	constexpr int32_t width = 840;
 	static float seed = 0.0f;
 	const sf::Vector2f spawn_position = { 420.0f,120.0f };
+	sf::Time spawn_cooldown = sf::seconds(0.02f);
+
 
 	const uint32_t frame_rate = 60;
 	const float physics_timestep = 1.0f / 60.0f;
 	float accumulator = 0.0f;
 	sf::Clock spawnClock;
-	sf::Time spawn_cooldown = sf::seconds(0.05f);
 	const int substeps = 8;
 	sf::Clock clock;
 	sf::Clock timer;
-	const size_t max_particle = 200;
+	const size_t max_particle = 300;
 
 	sf::RenderWindow window(sf::VideoMode({ width,height }), "VerletParticleSimulation");
 	sf::ContextSettings settings = window.getSettings();
@@ -83,7 +84,7 @@ int main() {
 			float angle = std::numbers::pi_v<float> * 0.5f +  1.2f * sin(3 * t);
 			sf::Color color = getRainbow(t);
 			auto& obj = solver.addObject(spawn_position, radius,color);
-			solver.setObjectVelocity(obj, 1.0f * sf::Vector2f{ cos(angle), sin(angle) });
+			solver.setObjectVelocity(obj, 3.0f * sf::Vector2f{ cos(angle), sin(angle) });
 			spawnClock.restart();
 			
 		}
