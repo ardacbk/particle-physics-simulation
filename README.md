@@ -1,6 +1,10 @@
 # particle-physics-simulation
 
 
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/6da2bb06-6af1-472b-9bf7-23f7378fe767"/>
+<div/>
 
-https://github.com/user-attachments/assets/0dab28ec-6563-4456-9829-c47fd40e23a9
+
+
 
